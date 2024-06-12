@@ -1,8 +1,7 @@
-from tkinter import Label, Entry, LabelFrame, W, E, END
-from tkinter import ttk
-from pages.base_page import Page
-from utils.run_query import run_query
 import hashlib
+from tkinter import ttk, Label, Entry, LabelFrame, W, E, END
+from pages.base_page import Page
+from services.user_service import UserService
 
 
 class RegisterPage(Page):
@@ -57,23 +56,16 @@ class RegisterPage(Page):
 
             # Get input values
             name = self.name.get()
-            last_name = self.last_name.get()
             password = self.password.get()
-
-            # Hash user password
+            last_name = self.last_name.get()
             hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-            # Define initial query
-            query = "INSERT INTO users (name, last_name, password) VALUES (?, ?, ?)"
-
-            # Tuple values
-            parameters = (name, last_name, hashed_password)
-
-            # Run query
-            run_query(query, parameters)
+            response_data = UserService.create_new_user(
+                parameters=(name, last_name, hashed_password)
+            )
 
             # Send output message
-            self.message["text"] = "User has been registered"
+            self.message["text"] = response_data
 
             # Clear all inputs
             self.name.delete(0, END)

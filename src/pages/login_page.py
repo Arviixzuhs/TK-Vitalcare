@@ -1,8 +1,8 @@
+import hashlib
 from tkinter import Label, Entry, LabelFrame, W, E, END
 from tkinter import ttk
 from .base_page import Page
-from utils.run_query import run_query
-import hashlib
+from services.user_service import UserService
 
 
 class LoginPage(Page):
@@ -42,17 +42,11 @@ class LoginPage(Page):
         # Hash user password
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-        # Define initial query
-        query = "SELECT * FROM users WHERE name = ? AND password = ?"
-
         # Tuple values
-        parameters = (name, hashed_password)
+        response_data = UserService.get_login(parameters=(name, hashed_password))
 
-        # Run query
-        result = run_query(query, parameters).fetchone()
-
-        if result:
-            self.login_success_callback(result)
+        if response_data:
+            self.login_success_callback(response_data)
         else:
             self.message["text"] = "Invalid username or password"
         self.name.delete(0, END)

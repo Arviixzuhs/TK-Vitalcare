@@ -1,6 +1,7 @@
+import hashlib
 from tkinter import Label, Entry, LabelFrame, W, E, Button, END
 from .base_page import Page
-from utils.run_query import run_query
+from services.user_service import UserService
 
 
 class ProfilePage(Page):
@@ -26,14 +27,28 @@ class ProfilePage(Page):
         self.last_name_entry.grid(row=2, column=1, sticky="w")
         self.last_name_entry.insert(0, user[2])
 
-        # Input Password
-        Label(self.frame, text="Password: ").grid(row=3, column=0, sticky="w")
-        self.password_entry = Entry(self.frame, show="*")
-        self.password_entry.grid(row=3, column=1, sticky="w")
-
-        # Update Profile
+        # Update Profile Button
         self.update_button = Button(
             self.frame, text="Update Profile", command=self.update_profile
+        )
+        self.update_button.grid(row=3, columnspan=2, sticky=W + E)
+
+        # User change password tab
+        self.change_password_frame = LabelFrame(self, text="Change password")
+        self.change_password_frame.grid(row=3, column=0, columnspan=2, pady=20, padx=20)
+
+        # Input Password
+        Label(self.change_password_frame, text="Password: ").grid(
+            row=3, column=0, sticky="w"
+        )
+        self.password_entry = Entry(self.change_password_frame, show="*")
+        self.password_entry.grid(row=3, column=1, sticky="w")
+
+        # Change password button
+        self.update_button = Button(
+            self.change_password_frame,
+            text="Change password",
+            command=self.change_password,
         )
         self.update_button.grid(row=4, columnspan=2, sticky=W + E)
 
@@ -45,25 +60,20 @@ class ProfilePage(Page):
         # Get input values
         name = self.name_entry.get()
         last_name = self.last_name_entry.get()
-        password = self.password_entry.get()
 
         if not name or not last_name:
-            self.message.config(text="Name and Last Name cannot be empty")
-            return
+            return self.message.config(text="Name, Last Name cannot be empty")
 
-        parameters = [name, last_name]
-        if password:
-            import hashlib
+        response_data = UserService.update_profile(
+            parameters=(name, last_name, self.user_id)
+        )
 
-            hashed_password = hashlib.sha256(password.encode()).hexdigest()
-            parameters.append(hashed_password)
-            query = (
-                "UPDATE users SET name = ?, last_name = ?, password = ? WHERE id = ?"
-            )
-        else:
-            query = "UPDATE users SET name = ?, last_name = ? WHERE id = ?"
+        self.message.config(text=response_data)
 
-        parameters.append(self.user_id)
-        run_query(query, parameters)
-
-        self.message.config(text="Profile updated successfully")
+    def change_password(self):
+        password = self.password_entry.get()
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+        response_data = UserService.update_password(
+            parameters=(hashed_password, self.user_id)
+        )
+        self.message.config(text=response_data)
