@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from .base_page import Page
 from tkinter import ttk
-from utils.run_query import run_query
+from services.product_service import ProductService
 
 
 class ProductPage(Page):
@@ -54,9 +54,9 @@ class ProductPage(Page):
         records = self.tree.get_children()
         for element in records:
             self.tree.delete(element)
-        query = "SELECT * FROM product ORDER BY name DESC"
-        db_rows = run_query(query)
-        for row in db_rows:
+
+        result = ProductService.get_products()
+        for row in result:
             self.tree.insert("", 0, text=row[1], values=row[2])
 
     def validation(self):
@@ -64,12 +64,10 @@ class ProductPage(Page):
 
     def add_product(self):
         if self.validation():
-            query = "INSERT INTO product VALUES(NULL, ?, ?)"
-            parameters = (self.name.get(), self.price.get())
-            run_query(query, parameters)
-            self.message["text"] = "Product {} added Successfully".format(
-                self.name.get()
+            response_data = ProductService.add_product(
+                parameters=(self.name.get(), self.price.get())
             )
+            self.message["text"] = response_data
             self.name.delete(0, END)
             self.price.delete(0, END)
         else:
@@ -78,23 +76,26 @@ class ProductPage(Page):
 
     def delete_product(self):
         self.message["text"] = ""
+
         try:
             self.tree.item(self.tree.selection())["text"][0]
-        except IndexError as e:
+        except:
             self.message["text"] = "Please select a Record"
             return
+
         self.message["text"] = ""
         name = self.tree.item(self.tree.selection())["text"]
-        query = "DELETE FROM product WHERE name = ?"
-        run_query(query, (name,))
-        self.message["text"] = "Record {} deleted Successfully".format(name)
+
+        response_data = ProductService.delete_product(parameters=(name,))
+
+        self.message["text"] = response_data
         self.get_products()
 
     def edit_product(self):
         self.message["text"] = ""
         try:
             self.tree.item(self.tree.selection())["values"][0]
-        except IndexError as e:
+        except:
             self.message["text"] = "Please, select Record"
             return
 
@@ -129,9 +130,9 @@ class ProductPage(Page):
         self.edit_wind.mainloop()
 
     def edit_records(self, new_name, name, new_price, old_price):
-        query = "UPDATE product SET name = ?, price = ? WHERE name = ? AND price = ?"
-        parameters = (new_name, new_price, name, old_price)
-        run_query(query, parameters)
+        response_data = ProductService.edit_product(
+            parameters=(new_name, new_price, name, old_price)
+        )
         self.edit_wind.destroy()
-        self.message["text"] = "Record {} updated successfully".format(name)
+        self.message["text"] = response_data
         self.get_products()
