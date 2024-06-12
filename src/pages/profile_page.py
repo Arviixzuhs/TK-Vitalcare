@@ -31,7 +31,11 @@ class ProfilePage(Page):
         self.update_button = Button(
             self.frame, text="Update Profile", command=self.update_profile
         )
-        self.update_button.grid(row=3, columnspan=2, sticky=W + E)
+        self.update_button.grid(row=5, columnspan=2, sticky=W + E)
+
+        # Output message change info profile
+        self.message_1 = Label(self.frame, text="", fg="red")
+        self.message_1.grid(row=4, columnspan=2, sticky=W + E)
 
         # User change password tab
         self.change_password_frame = LabelFrame(self, text="Change password")
@@ -50,11 +54,11 @@ class ProfilePage(Page):
             text="Change password",
             command=self.change_password,
         )
-        self.update_button.grid(row=4, columnspan=2, sticky=W + E)
+        self.update_button.grid(row=5, columnspan=2, sticky=W + E)
 
-        # Output message
-        self.message = Label(self.frame, text="", fg="red")
-        self.message.grid(row=5, columnspan=2, sticky=W + E)
+        # Output message change password
+        self.message_2 = Label(self.change_password_frame, text="", fg="red")
+        self.message_2.grid(row=4, columnspan=2, sticky=W + E)
 
     def update_profile(self):
         # Get input values
@@ -62,21 +66,21 @@ class ProfilePage(Page):
         last_name = self.last_name_entry.get()
 
         if not name or not last_name:
-            return self.message.config(text="Name, Last Name cannot be empty")
+            return self.message_1.config(text="Name, Last Name cannot be empty")
 
         response_data = UserService.update_profile(
             parameters=(name, last_name, self.user_id)
         )
 
-        self.message.config(text=response_data)
+        self.message_1.config(text=response_data)
 
     def change_password(self):
         password = self.password_entry.get()
         if not password:
-            return self.message.config(text="Password cannot be empty")
+            return self.message_2.config(text="Password cannot be empty")
 
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         response_data = UserService.update_password(
             parameters=(hashed_password, self.user_id)
         )
-        self.message.config(text=response_data)
+        self.message_2.config(text=response_data)
