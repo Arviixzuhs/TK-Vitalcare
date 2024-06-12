@@ -72,6 +72,9 @@ class ProfilePage(Page):
 
     def change_password(self):
         password = self.password_entry.get()
+        if not password:
+            return self.message.config(text="Password cannot be empty")
+
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         response_data = UserService.update_password(
             parameters=(hashed_password, self.user_id)
