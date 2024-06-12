@@ -1,0 +1,7 @@
+.vscode
+*.spec
+__pycache__
+build
+dist
+.env
+database.db
