@@ -14,7 +14,7 @@ class ConsultPage(Page):
         self.frame.grid(row=0, column=0, columnspan=2, pady=20, padx=20)
 
         # Tabla para mostrar consultas
-        self.tree = ttk.Treeview(self, height=20, columns=(1, 2, 3, 4, 5))
+        self.tree = ttk.Treeview(self, height=20, columns=(1, 2, 3, 4))
         self.tree.grid(row=2, column=0, columnspan=5)
         self.tree.heading("#0", text="ID", anchor=CENTER)
         self.tree.heading("#1", text="Fecha", anchor=CENTER)
