@@ -15,13 +15,13 @@ class LoginPage(Page):
         frame.grid(row=0, column=0, columnspan=3, pady=20)
 
         # Input name
-        Label(frame, text="Name: ").grid(row=1, column=0)
+        Label(frame, text="Nombre: ").grid(row=1, column=0)
         self.name = Entry(frame)
         self.name.focus()
         self.name.grid(row=1, column=1)
 
         # Input password
-        Label(frame, text="Password: ").grid(row=2, column=0)
+        Label(frame, text="Contraseña: ").grid(row=2, column=0)
         self.password = Entry(frame, show="*")
         self.password.grid(row=2, column=1)
 
@@ -48,6 +48,6 @@ class LoginPage(Page):
         if response_data:
             self.login_success_callback(response_data)
         else:
-            self.message["text"] = "Invalid username or password"
+            self.message["text"] = "Nombre o contraseña invalido"
         self.name.delete(0, END)
         self.password.delete(0, END)

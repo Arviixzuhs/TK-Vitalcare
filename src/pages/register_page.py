@@ -13,23 +13,23 @@ class RegisterPage(Page):
         frame.grid(row=0, column=0, columnspan=3, pady=20)
 
         # Input name
-        Label(frame, text="Name: ").grid(row=1, column=0)
+        Label(frame, text="Nombre: ").grid(row=1, column=0)
         self.name = Entry(frame)
         self.name.focus()
         self.name.grid(row=1, column=1)
 
         # Input Last Name
-        Label(frame, text="Last name: ").grid(row=2, column=0)
+        Label(frame, text="Apellido: ").grid(row=2, column=0)
         self.last_name = Entry(frame)
         self.last_name.grid(row=2, column=1)
 
         # Input password
-        Label(frame, text="Password: ").grid(row=3, column=0)
+        Label(frame, text="Contraseña: ").grid(row=3, column=0)
         self.password = Entry(frame, show="*")
         self.password.grid(row=3, column=1)
 
         # Input Repeat password
-        Label(frame, text="Repeat password: ").grid(row=4, column=0)
+        Label(frame, text="Repetir contraseña: ").grid(row=4, column=0)
         self.repeat_password = Entry(frame, show="*")
         self.repeat_password.grid(row=4, column=1)
 
@@ -73,4 +73,4 @@ class RegisterPage(Page):
             self.password.delete(0, END)
             self.repeat_password.delete(0, END)
         else:
-            self.message["text"] = "You need to complete all fields correctly"
+            self.message["text"] = "Necesitas completar todos los campos correctamente"

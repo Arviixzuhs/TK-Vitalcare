@@ -15,14 +15,14 @@ class UserService:
     def create_new_user(parameters):
         query = "INSERT INTO users (name, last_name, password) VALUES (?, ?, ?)"
         run_query(query, parameters).fetchone()
-        return "User has been registered"
+        return "Registrado correctamente"
 
     def update_profile(parameters):
         query = "UPDATE users SET name = ?, last_name = ? WHERE id = ?"
         run_query(query, parameters).fetchone()
-        return "Profile updated successfully"
+        return "Perfil actualizado correctamente"
 
     def update_password(parameters):
         query = "UPDATE users SET password = ? WHERE id = ?"
         run_query(query, parameters).fetchone()
-        return "Password updated successfully"
+        return "Contraseña actualizada correctamente"
